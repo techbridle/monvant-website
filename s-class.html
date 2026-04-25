@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Mercedes-Benz S-Class — Monvant</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  html, body { background: #0B0B0B; }
+  body { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
+  h1, h2, h3, h4, .font-serif { font-family: 'Bodoni Moda', serif; }
+  @keyframes slowZoom { from { transform: scale(1); } to { transform: scale(1.1); } }
+  html { scroll-behavior: smooth; }
+  .hair { height:1px; background: linear-gradient(to right, transparent, rgba(197,160,89,.5), transparent); }
+</style>
+</head>
+<body class="bg-[#0B0B0B] text-gray-200">
+<div id="root"></div>
+<script type="text/babel" data-presets="react">
+const { useState } = React;
+const Icon = ({ path, size=24, className='' }) => (<svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className={className} dangerouslySetInnerHTML={{__html:path}} />);
+const ArrowLeft = (p) => <Icon {...p} path={`<line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/>`} />;
+const ArrowRight = (p) => <Icon {...p} path={`<line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>`} />;
+const MessageCircle = (p) => <Icon {...p} path={`<path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>`} />;
+const Phone = (p) => <Icon {...p} path={`<path d="M22 16.92V21a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 5.18 2 2 0 0 1 4.11 3h4a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L9.09 10.9a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>`} />;
+const Monogram = ({size=34}) => (<svg width={size} height={size} viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="19" stroke="#C5A059" strokeWidth="0.8" opacity="0.55"/><text x="20" y="26" textAnchor="middle" fontFamily="Bodoni Moda, serif" fontSize="18" fill="#C5A059">M</text></svg>);
+
+const VEHICLE = {
+  name: 'Mercedes-Benz S-Class',
+  tag: '01 · Executive · Solo',
+  intro: 'The benchmark of executive travel. Serene, composed, engineered for stillness. The car you take when the journey should disappear.',
+  hero: 'public/fleet/sclass-hero.jpg',
+  gallery: [
+    { src: 'public/fleet/sclass-hero.jpg', c: 'S-Class · Standing' },
+    { src: 'public/fleet/belgravia-pair.jpg', c: 'S-Class · Belgravia' },
+  ],
+  specs: [
+    { k: 'Capacity', v: '3 passengers · 2 large cases' },
+    { k: 'Trim', v: 'Nappa leather · Burmester sound' },
+    { k: 'Cabin', v: 'Climate-controlled · Privacy glass' },
+    { k: 'Onboard', v: 'Wi-Fi · Still & sparkling water' },
+    { k: 'Comfort', v: 'Massage & ventilated rear seats' },
+    { k: 'Colour', v: 'Obsidian black metallic' },
+  ],
+  bestFor: ['Corporate transfers','Airport runs (LHR · LCY)','Discreet private hire','Hourly engagements'],
+  notFor: 'More than three passengers, significant luggage, or high-profile statement arrivals. See the V-Class or Range Rover.',
+  next: { name: 'Mercedes V-Class AMG Line', href: 'v-class.html' },
+};
+
+const App = () => {
+  const whatsappDigits = '447874450385';
+  const displayPhone = '+44 7874 450 385';
+
+  return (
+    <div className="min-h-screen bg-[#0B0B0B] text-gray-200 selection:bg-[#C5A059] selection:text-black">
+      <nav className="sticky top-0 z-50 bg-[#0B0B0B]/92 backdrop-blur-md border-b border-white/5">
+        <div className="max-w-[1360px] mx-auto px-6 md:px-10 py-5 flex justify-between items-center">
+          <a href="index.html" className="flex items-center gap-3">
+            <Monogram />
+            <div className="flex flex-col leading-none">
+              <span className="text-[20px] font-serif tracking-[0.35em] text-white">MONVANT</span>
+              <span className="text-[9px] tracking-[0.45em] text-[#C5A059] mt-[6px] uppercase">Chauffeur · London</span>
+            </div>
+          </a>
+          <a href="index.html" className="text-[10px] uppercase tracking-[0.3em] text-white/70 hover:text-white inline-flex items-center gap-2">
+            <ArrowLeft size={12}/> Back to Monvant
+          </a>
+        </div>
+      </nav>
+
+      {/* HERO */}
+      <header className="relative h-[75vh] min-h-[560px] overflow-hidden flex items-end">
+        <img src={VEHICLE.hero} alt={VEHICLE.name} className="absolute inset-0 w-full h-full object-cover opacity-60" style={{animation:'slowZoom 20s infinite alternate'}} />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0B0B0B] via-[#0B0B0B]/30 to-transparent"></div>
+        <div className="relative z-10 w-full pb-16 md:pb-24">
+          <div className="max-w-[1360px] mx-auto px-6 md:px-10">
+            <span className="block text-[10px] uppercase tracking-[0.5em] text-[#C5A059] mb-5">{VEHICLE.tag}</span>
+            <h1 className="font-serif text-white leading-[1.0]" style={{fontSize:'clamp(36px, 5.5vw, 76px)'}}>{VEHICLE.name}</h1>
+            <p className="mt-6 max-w-2xl text-lg md:text-xl text-white/75 font-light leading-[1.45]">{VEHICLE.intro}</p>
+            <div className="mt-8 flex flex-col sm:flex-row gap-4">
+              <a href="index.html#contact" className="group inline-flex items-center justify-center gap-3 px-8 py-4 bg-[#C5A059] text-black font-medium uppercase tracking-[0.28em] text-[11px] hover:bg-white transition-all">
+                Reserve the S-Class <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+              </a>
+              <a href={`https://wa.me/${whatsappDigits}?text=${encodeURIComponent('Hello Monvant, I would like to book the S-Class.')}`} target="_blank" rel="noopener" className="inline-flex items-center justify-center gap-3 px-8 py-4 border border-white/30 hover:border-[#C5A059] text-white uppercase tracking-[0.28em] text-[11px] transition-colors">
+                <MessageCircle size={14}/> WhatsApp
+              </a>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* SPECS */}
+      <section className="py-24 px-6 md:px-10">
+        <div className="max-w-[1120px] mx-auto grid md:grid-cols-12 gap-12">
+          <div className="md:col-span-5">
+            <span className="text-[10px] uppercase tracking-[0.4em] text-[#C5A059]">Specification</span>
+            <div className="hair mt-4 mb-8 w-24"></div>
+            <h2 className="font-serif text-white text-3xl md:text-4xl leading-tight">Quiet details, properly done.</h2>
+            <p className="mt-6 text-white/60 font-light leading-relaxed">
+              Every S-Class in our fleet is a current-generation W223 with executive rear-seat package. Serviced to Mercedes-Benz standards, valeted before every journey, and driven exclusively by chauffeurs we employ directly.
+            </p>
+          </div>
+          <div className="md:col-span-7">
+            <div className="border border-white/5">
+              {VEHICLE.specs.map((s,i) => (
+                <div key={s.k} className={`grid grid-cols-12 px-6 py-5 ${i < VEHICLE.specs.length-1 ? 'border-b border-white/5':''}`}>
+                  <span className="col-span-4 text-[10px] uppercase tracking-[0.3em] text-[#C5A059]/80 pt-1">{s.k}</span>
+                  <span className="col-span-8 text-white/85 text-[15px] font-light">{s.v}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* GALLERY */}
+      <section className="px-6 md:px-10 pb-10">
+        <div className="max-w-[1120px] mx-auto grid md:grid-cols-2 gap-4">
+          {VEHICLE.gallery.map((g,i) => (
+            <div key={i} className="relative aspect-[4/3] overflow-hidden bg-[#141414]">
+              <img src={g.src} alt={g.c} className="w-full h-full object-cover" />
+              <div className="absolute bottom-4 left-4 text-[9px] uppercase tracking-[0.3em] text-white/70">{g.c}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* BEST / NOT */}
+      <section className="py-24 px-6 md:px-10 bg-[#0E0E0E] border-y border-white/5">
+        <div className="max-w-[1120px] mx-auto grid md:grid-cols-2 gap-12">
+          <div>
+            <p className="text-[10px] uppercase tracking-[0.3em] text-[#C5A059] mb-5">Best for</p>
+            <ul className="space-y-3">
+              {VEHICLE.bestFor.map(b => <li key={b} className="text-white/75 text-lg flex items-center gap-4"><span className="w-8 h-px bg-[#C5A059]/60"></span>{b}</li>)}
+            </ul>
+          </div>
+          <div>
+            <p className="text-[10px] uppercase tracking-[0.3em] text-white/40 mb-5">Consider instead</p>
+            <p className="text-white/55 text-[15px] font-light leading-relaxed">{VEHICLE.notFor}</p>
+            <a href={VEHICLE.next.href} className="mt-6 inline-flex items-center gap-2 text-[#C5A059] text-[11px] uppercase tracking-[0.3em] hover:text-white transition-colors">
+              See the {VEHICLE.next.name.split(' ').slice(-2).join(' ')} <ArrowRight size={12}/>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="py-28 px-6 md:px-10">
+        <div className="max-w-[900px] mx-auto text-center">
+          <h3 className="font-serif text-white text-3xl md:text-5xl leading-[1.1]">Reserve the <span className="italic text-[#C5A059]">S-Class</span>.</h3>
+          <p className="mt-5 text-white/60 font-light">Response within the hour · Available 24/7</p>
+          <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="index.html#contact" className="px-9 py-5 bg-[#C5A059] text-black font-medium uppercase tracking-[0.3em] text-[11px] hover:bg-white transition-all">Booking form</a>
+            <a href={`tel:${whatsappDigits}`} className="px-9 py-5 border border-white/30 hover:border-[#C5A059] text-white uppercase tracking-[0.3em] text-[11px] transition-colors">{displayPhone}</a>
+          </div>
+        </div>
+      </section>
+
+      <footer className="py-10 border-t border-white/5">
+        <div className="max-w-[1360px] mx-auto px-6 md:px-10 flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] uppercase tracking-[0.3em] text-white/40">
+          <a href="index.html" className="hover:text-white">← Back to Monvant</a>
+          <span>© {new Date().getFullYear()} Monvant · London</span>
+        </div>
+      </footer>
+    </div>
+  );
+};
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>

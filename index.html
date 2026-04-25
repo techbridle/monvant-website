@@ -1,20 +1,554 @@
 <!doctype html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8" />
-  <link rel="icon" type="image/png" href="/favicon/favicon-96x96.png" sizes="96x96" />
-  <link rel="icon" type="image/svg+xml" href="/favicon/favicon.svg" />
-  <link rel="shortcut icon" href="/favicon/favicon.ico" />
-  <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
-  <link rel="manifest" href="/favicon/site.webmanifest" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Monvant Travel Redefined - Official Website</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Monvant — Your Journey, Your Standard</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  html, body { background: #0B0B0B; }
+  body { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
+  h1, h2, h3, h4, h5, .font-serif { font-family: 'Bodoni Moda', serif; }
+  @keyframes slowZoom { from { transform: scale(1); } to { transform: scale(1.12); } }
+  @keyframes softPulse { 0%, 100% { opacity: .55 } 50% { opacity: 1 } }
+  html { scroll-behavior: smooth; }
+  ::placeholder { color: rgba(255,255,255,0.25); text-transform: uppercase; font-size: 10px; letter-spacing: 0.15em; }
+  .hair { height: 1px; background: linear-gradient(to right, transparent, rgba(197,160,89,.5), transparent); }
+  .nav-link { position: relative; }
+  .nav-link::after { content: ''; position: absolute; left: 0; right: 100%; bottom: -6px; height: 1px; background: #C5A059; transition: right .35s ease; }
+  .nav-link:hover::after { right: 0; }
+  .monv-input { width: 100%; background: transparent; border: 0; border-bottom: 1px solid rgba(255,255,255,0.18); padding: 12px 0; color: white; font-size: 15px; outline: none; transition: border-color .3s ease; }
+  .monv-input:focus { border-color: #C5A059; }
+  select.monv-input option { color: white; background: #0B0B0B; }
+</style>
 </head>
+<body class="bg-[#0B0B0B] text-gray-200">
+<div id="root"></div>
 
-<body>
-  <div id="root"></div>
-  <script type="module" src="/src/main.jsx"></script>
+<script type="text/babel" data-presets="react">
+const { useState, useEffect, useMemo } = React;
+
+const Icon = ({ path, size = 24, className = '', strokeWidth = 1.5 }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round" className={className} dangerouslySetInnerHTML={{ __html: path }} />
+);
+const ArrowRight = (p) => <Icon {...p} path={`<line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>`} />;
+const ArrowUpRight = (p) => <Icon {...p} path={`<line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/>`} />;
+const Shield = (p) => <Icon {...p} path={`<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>`} />;
+const Clock = (p) => <Icon {...p} path={`<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>`} />;
+const MenuI = (p) => <Icon {...p} path={`<line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>`} />;
+const X = (p) => <Icon {...p} path={`<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>`} />;
+const Phone = (p) => <Icon {...p} path={`<path d="M22 16.92V21a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 5.18 2 2 0 0 1 4.11 3h4a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L9.09 10.9a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>`} />;
+const MessageCircle = (p) => <Icon {...p} path={`<path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>`} />;
+const Mail = (p) => <Icon {...p} path={`<rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="22,6 12,13 2,6"/>`} />;
+const Plane = (p) => <Icon {...p} path={`<path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.2.6-.6.5-1.1z"/>`} />;
+const Briefcase = (p) => <Icon {...p} path={`<rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>`} />;
+const Building = (p) => <Icon {...p} path={`<rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4"/>`} />;
+const Hourglass = (p) => <Icon {...p} path={`<path d="M5 22h14"/><path d="M5 2h14"/><path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"/><path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"/>`} />;
+const Sparkles = (p) => <Icon {...p} path={`<path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/>`} />;
+const Crown = (p) => <Icon {...p} path={`<path d="M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.734H5.81a1 1 0 0 1-.957-.734L2.02 6.02a.5.5 0 0 1 .798-.519l4.276 3.664a1 1 0 0 0 1.516-.294z"/><path d="M5 21h14"/>`} />;
+
+const Monogram = ({ size = 36 }) => (
+  <svg width={size} height={size} viewBox="0 0 40 40" fill="none">
+    <circle cx="20" cy="20" r="19" stroke="#C5A059" strokeWidth="0.8" opacity="0.55"/>
+    <text x="20" y="26" textAnchor="middle" fontFamily="Bodoni Moda, serif" fontSize="18" fill="#C5A059">M</text>
+  </svg>
+);
+
+/* Curated: 2 strong hero shots */
+const heroSlides = [
+  { src: 'public/fleet/belgravia-pair.jpg', label: 'Belgravia · Morning brief' },
+  { src: 'public/fleet/vclass-maybach-front.jpg', label: 'The V-Class · Private arrivals' },
+];
+
+/* Merged Why+Services: 6 distinct services, each carrying a trust pillar */
+const services = [
+  { Ico: Plane,     t: 'Airport Transfers', d: 'Real-time flight tracking and traffic monitoring. Chauffeur on site fifteen minutes before you land — LHR, LGW, LCY, STN, LTN.' },
+  { Ico: Briefcase, t: 'Corporate Travel',  d: 'For executives who treat every minute as valuable. Clean vehicles, silent rides, reliable schedules. We work around your calendar.' },
+  { Ico: Building,  t: 'Hotel Transfers',   d: 'Door-to-door from any hotel or property in London, with the quiet efficiency that reflects the quality of where you are staying.' },
+  { Ico: Hourglass, t: 'Hourly / As-directed', d: 'A chauffeur entirely at your disposal — busy schedules, multiple stops, the whole day handled.' },
+  { Ico: Sparkles,  t: 'Private Jet & FBO', d: 'Tarmac-side pickups and drop-offs at Farnborough, Biggin Hill, Northolt. Precision and discretion, always.' },
+  { Ico: Crown,     t: 'Events & Occasions', d: 'Weddings, galas, corporate events — arrive in a vehicle that says something before you say a word.' },
+];
+
+const fleet = [
+  { id: 'sclass', page: 's-class.html', tag: '01', name: 'Mercedes-Benz S-Class', sub: 'Executive · Solo', pitch: 'The benchmark of executive travel. A serene, composed cabin for solo executives and private clients who value stillness on the move.', best: ['Corporate transfers','Airport runs','Discreet private hire'], hero: 'public/fleet/sclass-hero.jpg', aux: 'public/fleet/belgravia-pair.jpg' },
+  { id: 'vclass', page: 'v-class.html', tag: '02', name: 'Mercedes V-Class AMG Line', sub: 'Group · VIP · Family', pitch: 'Space without compromise. Seven seats, full luxury. Quilted leather, starlight headliner, in-cabin workstation.', best: ['Group airport transfers','Family travel','VIP events'], hero: 'public/fleet/vclass-maybach-front.jpg', aux: 'public/fleet/vip-cabin-wide.jpg' },
+  { id: 'rangerover', page: 'range-rover.html', tag: '03', name: 'Range Rover Autobiography', sub: 'Statement · Prestige', pitch: 'The car that arrives before you do. Commanding, unmistakable, and immaculately appointed inside.', best: ['Weddings','High-profile arrivals','Private jet connections'], hero: 'public/fleet/velar-trees.jpg', aux: 'public/fleet/velar-rear.jpg' },
+];
+
+/* Trimmed to 5 */
+const vipGallery = [
+  { src: 'public/fleet/vip-cabin-wide.jpg',   c: 'Executive cabin · Starlight headliner' },
+  { src: 'public/fleet/vip-seat-quilted.jpg', c: 'Hand-stitched diamond-quilt' },
+  { src: 'public/fleet/vip-screen.jpg',       c: 'In-cabin 4K entertainment' },
+  { src: 'public/fleet/vip-trays.jpg',        c: 'Configurable workspace' },
+  { src: 'public/fleet/vip-armrest-detail.jpg', c: 'Ambient light detail' },
+];
+
+const coverageAreas = ['Mayfair','Belgravia','Knightsbridge','Chelsea','Kensington','Marylebone','Notting Hill','The City','Canary Wharf','Hampstead','St John\u2019s Wood','Richmond'];
+const airports = [
+  { code: 'LHR', name: 'Heathrow',    dist: '28 min · Mayfair' },
+  { code: 'LGW', name: 'Gatwick',     dist: '55 min · Mayfair' },
+  { code: 'LCY', name: 'London City', dist: '24 min · The City' },
+  { code: 'STN', name: 'Stansted',    dist: '58 min · The City' },
+  { code: 'LTN', name: 'Luton',       dist: '52 min · Marylebone' },
+  { code: 'FAB', name: 'Farnborough', dist: '58 min · Mayfair' },
+];
+
+const App = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [pastHero, setPastHero] = useState(false);
+  const [showCookies, setShowCookies] = useState(false);
+  const whatsappDigits = '447874450385';
+  const displayPhone = '+44 7874 450 385';
+  const companyEmail = 'info@monvant.vip';
+
+  const [form, setForm] = useState({ fullName:'', contact:'', journey:'Airport Transfer', vehicle:'S-Class', datetime:'', requirements:'' });
+  const [heroIndex, setHeroIndex] = useState(0);
+  const [lightbox, setLightbox] = useState(null);
+  const [touchStartY, setTouchStartY] = useState(null);
+
+  useEffect(() => {
+    const onScroll = () => { setScrolled(window.scrollY > 40); setPastHero(window.scrollY > window.innerHeight * 0.7); };
+    window.addEventListener('scroll', onScroll);
+    if (localStorage.getItem('monvant_cookie_ok') !== '1') setShowCookies(true);
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+  useEffect(() => { document.body.style.overflow = isMenuOpen ? 'hidden' : ''; }, [isMenuOpen]);
+  useEffect(() => { const id = setInterval(() => setHeroIndex(i => (i+1)%heroSlides.length), 7000); return () => clearInterval(id); }, []);
+
+  const openWhatsApp = (text) => {
+    const msg = text ? encodeURIComponent(text) : '';
+    window.open(`https://wa.me/${whatsappDigits}${msg ? `?text=${msg}` : ''}`, '_blank', 'noopener,noreferrer');
+  };
+  const inquiryText = useMemo(() => [
+    '*Monvant Chauffeur Booking*',
+    `Name: ${form.fullName || '-'}`,
+    `Contact: ${form.contact || '-'}`,
+    `Journey: ${form.journey}`,
+    `Vehicle: ${form.vehicle}`,
+    `When: ${form.datetime || 'Flexible'}`,
+    `Notes: ${form.requirements || '—'}`,
+  ].join('\n'), [form]);
+
+  const NavItem = ({ href, label, onClick }) => (
+    <a href={href} onClick={onClick} className="nav-link text-[11px] uppercase tracking-[0.28em] text-white/85 hover:text-white transition-colors">{label}</a>
+  );
+
+  return (
+    <div className="min-h-screen bg-[#0B0B0B] text-gray-200 selection:bg-[#C5A059] selection:text-black">
+
+      <nav className={`fixed top-0 w-full z-50 transition-all duration-500 ${scrolled ? 'bg-[#0B0B0B]/92 backdrop-blur-md py-4 border-b border-white/5' : 'bg-transparent py-7'}`}>
+        <div className="max-w-[1360px] mx-auto px-6 md:px-10 flex justify-between items-center">
+          <a href="#top" className="flex items-center gap-3">
+            <Monogram size={34} />
+            <div className="flex flex-col leading-none">
+              <span className="text-[22px] font-serif tracking-[0.35em] text-white">MONVANT</span>
+              <span className="text-[9px] tracking-[0.45em] text-[#C5A059] mt-[6px] uppercase">Chauffeur · London</span>
+            </div>
+          </a>
+          <div className="hidden md:flex items-center gap-10">
+            <NavItem href="#services" label="Services" />
+            <NavItem href="#fleet"    label="Fleet" />
+            <NavItem href="#coverage" label="Coverage" />
+            <NavItem href="#contact"  label="Contact" />
+            <a href="#contact" className="group inline-flex items-center gap-3 px-5 py-2.5 border border-[#C5A059]/60 hover:border-[#C5A059] hover:bg-[#C5A059] hover:text-black transition-all text-[10px] uppercase tracking-[0.28em] text-[#C5A059]">
+              Book a Journey <ArrowRight size={12} className="group-hover:translate-x-0.5 transition-transform" />
+            </a>
+          </div>
+          <button className="md:hidden text-white" onClick={() => setIsMenuOpen(true)}><MenuI size={24} /></button>
+        </div>
+      </nav>
+
+      <div className={`fixed inset-0 z-[60] bg-black transition-transform duration-500 flex flex-col p-8 ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+        <div className="flex justify-between items-center">
+          <span className="text-lg font-serif tracking-[0.35em] text-white">MONVANT</span>
+          <button onClick={() => setIsMenuOpen(false)}><X size={28} /></button>
+        </div>
+        <div className="flex flex-col items-center justify-center flex-grow space-y-8 text-2xl font-serif">
+          {['services','fleet','coverage','contact'].map(h => (
+            <a key={h} href={`#${h}`} onClick={() => setIsMenuOpen(false)} className="text-white/85 hover:text-[#C5A059] tracking-[0.08em]">{h[0].toUpperCase()+h.slice(1)}</a>
+          ))}
+        </div>
+      </div>
+
+      {/* HERO */}
+      <header id="top" className="relative h-screen min-h-[720px] overflow-hidden flex items-end">
+        {heroSlides.map((img, idx) => (
+          <img key={img.src} src={img.src} alt={img.label} loading={idx === 0 ? 'eager' : 'lazy'}
+               className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-[1400ms] ${heroIndex === idx ? 'opacity-55' : 'opacity-0'}`}
+               style={{ animation: 'slowZoom 20s infinite alternate' }} />
+        ))}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0B0B0B]/80 via-transparent to-[#0B0B0B]" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#0B0B0B]/70 via-transparent to-transparent" />
+
+        <div className="absolute top-28 md:top-32 left-0 right-0">
+          <div className="max-w-[1360px] mx-auto px-6 md:px-10 flex justify-between items-center text-[10px] uppercase tracking-[0.4em] text-white/55">
+            <span>London · Private chauffeur</span>
+            <span className="hidden md:flex items-center gap-3"><span className="w-1.5 h-1.5 rounded-full bg-emerald-400" style={{animation:'softPulse 2.4s infinite'}}></span>Concierge online · 24/7</span>
+          </div>
+        </div>
+
+        <div className="relative z-10 w-full pb-20 md:pb-28">
+          <div className="max-w-[1360px] mx-auto px-6 md:px-10 grid md:grid-cols-12 gap-10 items-end">
+            <div className="md:col-span-8">
+              <span className="block text-[10px] uppercase tracking-[0.5em] text-[#C5A059] mb-6">Private Chauffeur · London</span>
+              <h1 className="font-serif text-white leading-[1.0] tracking-tight" style={{ fontSize: 'clamp(36px, 5.5vw, 76px)' }}>
+                Your Journey,<br/>
+                <span className="italic text-[#C5A059]">Your Standard.</span>
+              </h1>
+              <p className="mt-8 max-w-xl text-lg md:text-xl text-white/75 font-light leading-[1.45]">
+                Three cars. One standard. London's quietest chauffeur — on tarmac fifteen minutes before you land, and never a minute later.
+              </p>
+              <div className="mt-10 flex flex-col sm:flex-row gap-4">
+                <a href="#contact" className="group inline-flex items-center justify-center gap-3 px-9 py-5 bg-[#C5A059] text-black font-medium uppercase tracking-[0.28em] text-[11px] hover:bg-white transition-all">
+                  Book your journey <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                </a>
+                <button onClick={() => openWhatsApp('Hello Monvant, I would like to make a booking.')} className="inline-flex items-center justify-center gap-3 px-9 py-5 border border-white/30 hover:border-[#C5A059] text-white uppercase tracking-[0.28em] text-[11px] transition-colors">
+                  <MessageCircle size={14} /> WhatsApp concierge
+                </button>
+              </div>
+            </div>
+            <div className="md:col-span-4 hidden md:flex flex-col items-end gap-3">
+              <div className="flex items-center gap-3 text-[10px] uppercase tracking-[0.3em] text-white/50">
+                <span>{String(heroIndex + 1).padStart(2,'0')} / {String(heroSlides.length).padStart(2,'0')}</span>
+                <div className="w-20 h-px bg-white/20 relative overflow-hidden">
+                  <div className="absolute inset-y-0 left-0 bg-[#C5A059]" style={{ width: `${((heroIndex+1)/heroSlides.length)*100}%`, transition: 'width .6s ease' }}></div>
+                </div>
+              </div>
+              <p className="text-right text-white/60 text-sm tracking-[0.18em] uppercase">{heroSlides[heroIndex].label}</p>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* SERVICES (merged trust + services) */}
+      <section id="services" className="relative py-28 md:py-36 px-6 md:px-10">
+        <div className="max-w-[1360px] mx-auto">
+          <div className="grid md:grid-cols-12 gap-10 mb-20 items-end">
+            <div className="md:col-span-6">
+              <span className="text-[10px] uppercase tracking-[0.4em] text-[#C5A059]">What we do</span>
+              <div className="hair mt-4 mb-8 w-24"></div>
+              <h2 className="font-serif text-white text-4xl md:text-5xl leading-[1.05]">
+                Six services. One standard — <span className="italic">yours</span>.
+              </h2>
+            </div>
+            <div className="md:col-span-5 md:col-start-8">
+              <p className="text-white/60 text-lg font-light leading-relaxed">
+                Professional chauffeurs, not drivers. Privately-owned fleet, valeted before every journey. Real response within the hour, every hour of the day.
+              </p>
+              <div className="mt-6 flex flex-wrap gap-x-6 gap-y-3 text-[10px] uppercase tracking-[0.3em] text-white/50">
+                <span className="flex items-center gap-2"><Clock size={12} className="text-[#C5A059]"/>Punctual, always</span>
+                <span className="flex items-center gap-2"><Shield size={12} className="text-[#C5A059]"/>Fully licensed</span>
+                <span className="flex items-center gap-2"><Sparkles size={12} className="text-[#C5A059]"/>24/7 concierge</span>
+              </div>
+            </div>
+          </div>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-px bg-white/5 border border-white/5">
+            {services.map(({ Ico, t, d }, i) => (
+              <div key={i} className="group relative bg-[#0B0B0B] p-10 hover:bg-[#141414] transition-colors flex flex-col gap-5 min-h-[260px]">
+                <div className="flex items-start justify-between">
+                  <Ico size={24} className="text-[#C5A059]" strokeWidth={1.3} />
+                  <span className="text-[10px] tracking-[0.3em] text-white/25">{String(i+1).padStart(2,'0')}</span>
+                </div>
+                <h4 className="font-serif text-white text-2xl">{t}</h4>
+                <p className="text-white/55 font-light leading-relaxed text-[15px]">{d}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FLEET */}
+      <section id="fleet" className="py-28 md:py-36 px-6 md:px-10 bg-[#0E0E0E] border-y border-white/5">
+        <div className="max-w-[1120px] mx-auto">
+          <div className="grid md:grid-cols-12 gap-10 mb-16 items-end">
+            <div className="md:col-span-7">
+              <span className="text-[10px] uppercase tracking-[0.4em] text-[#C5A059]">The Fleet</span>
+              <div className="hair mt-4 mb-8 w-24"></div>
+              <h2 className="font-serif text-white text-4xl md:text-5xl leading-[1.05]">Three vehicles. Chosen for a reason.</h2>
+            </div>
+            <div className="md:col-span-4 md:col-start-9">
+              <p className="text-white/60 font-light leading-relaxed">
+                We do fewer things exceptionally well. Every car is privately owned, maintained to manufacturer specification, and valeted before every journey.
+              </p>
+            </div>
+          </div>
+
+          <div className="space-y-6">
+            {fleet.map((v) => (
+              <article key={v.id} className="group grid md:grid-cols-12 gap-4 md:gap-6 items-stretch">
+                <a href={v.page} className="md:col-span-6 relative overflow-hidden aspect-[4/3] bg-[#141414] block">
+                  <img src={v.hero} alt={v.name} className="w-full h-full object-cover transition-transform duration-[1400ms] group-hover:scale-105" />
+                  <div className="absolute top-4 left-4 text-[10px] uppercase tracking-[0.4em] text-white/80">{v.tag}</div>
+                  <div className="absolute bottom-4 left-4 right-4 flex justify-between items-end">
+                    <span className="text-[10px] uppercase tracking-[0.35em] text-[#C5A059]">{v.sub}</span>
+                    <span className="text-[10px] uppercase tracking-[0.3em] text-white/70 inline-flex items-center gap-2 bg-black/40 backdrop-blur px-3 py-2">
+                      Explore <ArrowUpRight size={12}/>
+                    </span>
+                  </div>
+                </a>
+                <div className="md:col-span-6 bg-[#101010] border border-white/5 p-7 md:p-9 flex flex-col">
+                  <h3 className="font-serif text-white text-2xl md:text-3xl leading-tight">{v.name}</h3>
+                  <p className="mt-4 text-white/60 font-light leading-relaxed">{v.pitch}</p>
+                  <div className="mt-6 space-y-2">
+                    <p className="text-[10px] uppercase tracking-[0.3em] text-[#C5A059]/80">Best for</p>
+                    <ul className="space-y-1.5">
+                      {v.best.map(b => (
+                        <li key={b} className="text-white/70 text-[15px] flex items-center gap-3">
+                          <span className="w-5 h-px bg-[#C5A059]/60"></span>{b}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div className="mt-auto pt-8 flex items-center gap-3">
+                    <a href={v.page} className="flex-1 text-center py-4 border border-[#C5A059]/60 hover:bg-[#C5A059] hover:text-black text-[10px] uppercase tracking-[0.3em] text-[#C5A059] transition-all">
+                      Vehicle page
+                    </a>
+                    <a href="#contact" className="flex-1 text-center py-4 bg-[#C5A059] hover:bg-white text-black text-[10px] uppercase tracking-[0.3em] transition-all">
+                      Reserve
+                    </a>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+
+          {/* VIP interior mosaic — trimmed to 5 */}
+          <div className="mt-20 pt-16 border-t border-white/5">
+            <div className="mb-10">
+              <span className="text-[10px] uppercase tracking-[0.4em] text-[#C5A059]">V-Class · VIP specification</span>
+              <div className="hair mt-4 mb-6 w-24"></div>
+              <h3 className="font-serif text-white text-3xl md:text-4xl leading-tight max-w-3xl">A cabin designed to <span className="italic">quiet</span> the world outside.</h3>
+            </div>
+            <div className="grid grid-cols-12 auto-rows-[140px] md:auto-rows-[180px] gap-3">
+              <button onClick={() => setLightbox({ src: vipGallery[0].src, caption: vipGallery[0].c })} className="col-span-12 md:col-span-8 row-span-3 relative overflow-hidden group bg-[#0c0c0c]">
+                <img src={vipGallery[0].src} alt={vipGallery[0].c} className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1400ms] group-hover:scale-105" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-60 group-hover:opacity-90 transition-opacity"></div>
+                <div className="absolute left-4 right-4 bottom-3 text-[9px] uppercase tracking-[0.3em] text-white/80 text-left">{vipGallery[0].c}</div>
+              </button>
+              <button onClick={() => setLightbox({ src: vipGallery[1].src, caption: vipGallery[1].c })} className="col-span-6 md:col-span-4 row-span-2 relative overflow-hidden group bg-[#0c0c0c]">
+                <img src={vipGallery[1].src} alt={vipGallery[1].c} className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1400ms] group-hover:scale-105" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-60"></div>
+                <div className="absolute left-4 right-4 bottom-3 text-[9px] uppercase tracking-[0.3em] text-white/80 text-left">{vipGallery[1].c}</div>
+              </button>
+              <button onClick={() => setLightbox({ src: vipGallery[2].src, caption: vipGallery[2].c })} className="col-span-6 md:col-span-4 row-span-1 relative overflow-hidden group bg-[#0c0c0c]">
+                <img src={vipGallery[2].src} alt={vipGallery[2].c} className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1400ms] group-hover:scale-105" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-60"></div>
+                <div className="absolute left-4 right-4 bottom-3 text-[9px] uppercase tracking-[0.3em] text-white/80 text-left">{vipGallery[2].c}</div>
+              </button>
+              <button onClick={() => setLightbox({ src: vipGallery[3].src, caption: vipGallery[3].c })} className="col-span-6 md:col-span-6 row-span-2 relative overflow-hidden group bg-[#0c0c0c]">
+                <img src={vipGallery[3].src} alt={vipGallery[3].c} className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1400ms] group-hover:scale-105" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-60"></div>
+                <div className="absolute left-4 right-4 bottom-3 text-[9px] uppercase tracking-[0.3em] text-white/80 text-left">{vipGallery[3].c}</div>
+              </button>
+              <button onClick={() => setLightbox({ src: vipGallery[4].src, caption: vipGallery[4].c })} className="col-span-6 md:col-span-6 row-span-2 relative overflow-hidden group bg-[#0c0c0c]">
+                <img src={vipGallery[4].src} alt={vipGallery[4].c} className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1400ms] group-hover:scale-105" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-60"></div>
+                <div className="absolute left-4 right-4 bottom-3 text-[9px] uppercase tracking-[0.3em] text-white/80 text-left">{vipGallery[4].c}</div>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* COVERAGE */}
+      <section id="coverage" className="py-28 md:py-36 px-6 md:px-10">
+        <div className="max-w-[1120px] mx-auto">
+          <div className="grid md:grid-cols-12 gap-10 mb-14 items-end">
+            <div className="md:col-span-6">
+              <span className="text-[10px] uppercase tracking-[0.4em] text-[#C5A059]">Coverage</span>
+              <div className="hair mt-4 mb-8 w-24"></div>
+              <h2 className="font-serif text-white text-4xl md:text-5xl leading-[1.05]">London. Every hour. Every postcode.</h2>
+            </div>
+            <div className="md:col-span-5 md:col-start-8">
+              <p className="text-white/60 font-light leading-relaxed">
+                Based in central London, we cover every borough, every major airport, and every private aviation terminal within the M25 — plus out-of-London runs on request.
+              </p>
+            </div>
+          </div>
+
+          <div className="grid md:grid-cols-12 gap-10">
+            {/* Areas */}
+            <div className="md:col-span-5">
+              <p className="text-[10px] uppercase tracking-[0.3em] text-[#C5A059]/80 mb-5">Central & inner London</p>
+              <div className="grid grid-cols-2 gap-y-3 gap-x-6">
+                {coverageAreas.map(a => (
+                  <span key={a} className="text-white/70 text-[15px] flex items-center gap-3">
+                    <span className="w-1.5 h-1.5 bg-[#C5A059]/70 rounded-full"></span>{a}
+                  </span>
+                ))}
+              </div>
+            </div>
+            {/* Airports */}
+            <div className="md:col-span-7">
+              <p className="text-[10px] uppercase tracking-[0.3em] text-[#C5A059]/80 mb-5">Airports & FBOs</p>
+              <div className="border border-white/5">
+                {airports.map((a, i) => (
+                  <div key={a.code} className={`grid grid-cols-12 items-center px-5 py-4 ${i < airports.length-1 ? 'border-b border-white/5' : ''} hover:bg-white/[0.02] transition-colors`}>
+                    <span className="col-span-2 font-serif text-[#C5A059] text-xl">{a.code}</span>
+                    <span className="col-span-5 text-white text-[15px]">{a.name}</span>
+                    <span className="col-span-5 text-right text-white/50 text-[13px] uppercase tracking-[0.15em]">{a.dist}</span>
+                  </div>
+                ))}
+              </div>
+              <p className="mt-4 text-[11px] text-white/40 uppercase tracking-[0.2em]">Journey times are indicative · Traffic & time of day vary</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* TESTIMONIAL */}
+      <section className="py-24 md:py-32 px-6 md:px-10 bg-[#0E0E0E] border-y border-white/5">
+        <div className="max-w-[900px] mx-auto text-center">
+          <span className="text-[10px] uppercase tracking-[0.4em] text-[#C5A059]">In their words</span>
+          <div className="hair mt-4 mb-10 w-24 mx-auto"></div>
+          <p className="font-serif text-white text-2xl md:text-4xl leading-[1.2] italic">
+            "I've used chauffeur firms on three continents. Monvant is the only one where I've never once had to think about the car. That's the whole point."
+          </p>
+          <div className="mt-8 flex items-center justify-center gap-4 text-[10px] uppercase tracking-[0.35em] text-white/55">
+            <span className="w-8 h-px bg-[#C5A059]/50"></span>
+            <span>M. Halvorsen · Financial Services · London</span>
+            <span className="w-8 h-px bg-[#C5A059]/50"></span>
+          </div>
+        </div>
+      </section>
+
+      {/* CONTACT */}
+      <section id="contact" className="py-28 md:py-36 px-6 md:px-10">
+        <div className="max-w-[1360px] mx-auto">
+          <div className="grid md:grid-cols-12 gap-12 md:gap-20">
+            <div className="md:col-span-5">
+              <span className="text-[10px] uppercase tracking-[0.4em] text-[#C5A059]">Book / Contact</span>
+              <div className="hair mt-4 mb-8 w-24"></div>
+              <h2 className="font-serif text-white text-4xl md:text-5xl leading-[1.05]">Ready when you are.</h2>
+              <p className="mt-6 text-white/60 font-light leading-relaxed max-w-md">
+                Form, phone, or WhatsApp — we'll confirm quickly and handle the rest. Response within the hour, typically much sooner.
+              </p>
+              <div className="mt-12 space-y-7">
+                <a href={`tel:${whatsappDigits}`} className="group flex items-start gap-4">
+                  <Phone className="text-[#C5A059] mt-1" size={18} />
+                  <div>
+                    <p className="text-[10px] uppercase tracking-[0.3em] text-white/40 mb-1">Direct line · 24/7</p>
+                    <p className="text-xl text-white group-hover:text-[#C5A059] transition-colors font-light">{displayPhone}</p>
+                  </div>
+                </a>
+                <a href={`mailto:${companyEmail}`} className="group flex items-start gap-4">
+                  <Mail className="text-[#C5A059] mt-1" size={18} />
+                  <div>
+                    <p className="text-[10px] uppercase tracking-[0.3em] text-white/40 mb-1">Email</p>
+                    <p className="text-xl text-white group-hover:text-[#C5A059] transition-colors font-light">{companyEmail}</p>
+                  </div>
+                </a>
+                <button onClick={() => openWhatsApp('Hello Monvant')} className="group flex items-start gap-4 text-left w-full">
+                  <MessageCircle className="text-[#C5A059] mt-1" size={18} />
+                  <div>
+                    <p className="text-[10px] uppercase tracking-[0.3em] text-white/40 mb-1">WhatsApp</p>
+                    <p className="text-xl text-white group-hover:text-[#C5A059] transition-colors font-light">Message the concierge</p>
+                  </div>
+                </button>
+              </div>
+            </div>
+            <form onSubmit={(e)=>{e.preventDefault(); openWhatsApp(inquiryText);}} className="md:col-span-6 md:col-start-7 space-y-8">
+              <div className="grid sm:grid-cols-2 gap-6">
+                <Field label="Full name"><input required value={form.fullName} onChange={(e) => setForm({ ...form, fullName: e.target.value })} className="monv-input" /></Field>
+                <Field label="Contact · Phone or email"><input required value={form.contact} onChange={(e) => setForm({ ...form, contact: e.target.value })} className="monv-input" /></Field>
+              </div>
+              <div className="grid sm:grid-cols-2 gap-6">
+                <Field label="Journey type">
+                  <select value={form.journey} onChange={(e) => setForm({ ...form, journey: e.target.value })} className="monv-input appearance-none pr-6">
+                    {['Airport Transfer','Corporate Travel','Hotel Transfer','Hourly Hire','Private Jet / FBO','Event / Occasion'].map(o => <option key={o}>{o}</option>)}
+                  </select>
+                </Field>
+                <Field label="Vehicle preference">
+                  <select value={form.vehicle} onChange={(e) => setForm({ ...form, vehicle: e.target.value })} className="monv-input appearance-none pr-6">
+                    {['S-Class','V-Class AMG Line','Range Rover Autobiography','No preference'].map(o => <option key={o}>{o}</option>)}
+                  </select>
+                </Field>
+              </div>
+              <Field label="Date & time (flexible)">
+                <input type="text" placeholder="e.g. Thursday 14 May · 08:30 · LHR T5" value={form.datetime} onChange={(e) => setForm({ ...form, datetime: e.target.value })} className="monv-input" />
+              </Field>
+              <Field label="Notes">
+                <textarea rows={3} value={form.requirements} onChange={(e) => setForm({ ...form, requirements: e.target.value })} className="monv-input resize-none" placeholder="Flight number · passenger count · special requests"></textarea>
+              </Field>
+              <button className="group w-full py-5 bg-[#C5A059] text-black font-medium uppercase tracking-[0.3em] text-[11px] hover:bg-white transition-all inline-flex items-center justify-center gap-3">
+                Send booking request <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+              </button>
+              <p className="text-center text-[10px] uppercase tracking-[0.3em] text-white/30">Opens WhatsApp · Reply within the hour</p>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      {/* FOOTER — simplified */}
+      <footer className="py-14 border-t border-white/5">
+        <div className="max-w-[1360px] mx-auto px-6 md:px-10 flex flex-col md:flex-row justify-between items-center gap-8">
+          <div className="flex items-center gap-3">
+            <Monogram size={32} />
+            <div className="flex flex-col leading-none">
+              <span className="text-lg font-serif tracking-[0.35em] text-white">MONVANT</span>
+              <span className="text-[9px] tracking-[0.4em] text-[#C5A059]/80 mt-[5px] uppercase">Chauffeur · London</span>
+            </div>
+          </div>
+          <div className="flex flex-col md:flex-row items-center gap-5 md:gap-10 text-[10px] uppercase tracking-[0.3em] text-white/50">
+            <a href={`tel:${whatsappDigits}`} className="hover:text-white transition-colors">{displayPhone}</a>
+            <a href={`mailto:${companyEmail}`} className="hover:text-white transition-colors">{companyEmail}</a>
+            <span className="text-white/30">© {new Date().getFullYear()} Monvant</span>
+          </div>
+        </div>
+      </footer>
+
+      {/* MOBILE STICKY BOOK BAR */}
+      <div className={`md:hidden fixed bottom-0 left-0 right-0 z-[70] bg-[#0B0B0B]/95 backdrop-blur border-t border-white/10 p-3 transition-transform duration-500 ${pastHero ? 'translate-y-0' : 'translate-y-full'}`}>
+        <div className="flex gap-2">
+          <button onClick={() => openWhatsApp('Hello Monvant, I would like to make a booking.')} className="flex-1 py-3.5 bg-[#C5A059] text-black text-[10px] uppercase tracking-[0.28em] font-medium inline-flex items-center justify-center gap-2">
+            <MessageCircle size={14} /> WhatsApp now
+          </button>
+          <a href={`tel:${whatsappDigits}`} className="w-14 h-[46px] flex items-center justify-center border border-[#C5A059]/50 text-[#C5A059]">
+            <Phone size={16} />
+          </a>
+        </div>
+      </div>
+
+      {/* LIGHTBOX */}
+      {lightbox && (
+        <div className="fixed inset-0 bg-black/95 backdrop-blur-sm z-[100] flex flex-col items-center justify-center p-6"
+             onClick={() => setLightbox(null)}
+             onTouchStart={(e) => setTouchStartY(e.touches[0].clientY)}
+             onTouchEnd={(e) => { if (touchStartY && e.changedTouches[0].clientY - touchStartY > 80) setLightbox(null); }}>
+          <button className="absolute top-6 right-6 text-white/70 hover:text-white p-2"><X size={28} /></button>
+          <img src={lightbox.src} className="max-w-[90vw] max-h-[80vh] object-contain" alt="" />
+          <p className="mt-6 text-[#C5A059] uppercase tracking-[0.4em] text-[10px]">{lightbox.caption}</p>
+        </div>
+      )}
+
+      {showCookies && (
+        <div className="fixed bottom-6 left-6 right-6 md:left-auto md:w-[380px] bg-[#0B0B0B] border border-white/10 p-6 z-[80] shadow-2xl">
+          <p className="text-[10px] uppercase tracking-[0.3em] text-[#C5A059] mb-2">Cookies & Privacy</p>
+          <p className="text-xs text-white/55 font-light leading-relaxed mb-4">Essential cookies only. For reservation and site security.</p>
+          <button onClick={() => { localStorage.setItem('monvant_cookie_ok','1'); setShowCookies(false); }} className="w-full py-3 bg-white/5 hover:bg-[#C5A059] hover:text-black text-white text-[10px] uppercase tracking-[0.3em] transition-all">I Accept</button>
+        </div>
+      )}
+    </div>
+  );
+};
+
+const Field = ({ label, children }) => (
+  <label className="block">
+    <span className="block text-[9px] uppercase tracking-[0.3em] text-white/40 mb-2">{label}</span>
+    {children}
+  </label>
+);
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
 </body>
-
 </html>

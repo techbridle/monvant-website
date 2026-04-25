@@ -1,16 +1,32 @@
-# React + Vite
+# Monvant — Static Site
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Ready-to-deploy static build.
 
-Currently, two official plugins are available:
+## Files
+- `index.html` — main website
+- `s-class.html` — Mercedes-Benz S-Class vehicle page
+- `v-class.html` — Mercedes V-Class AMG Line vehicle page
+- `range-rover.html` — Range Rover Autobiography vehicle page
+- `public/fleet/` — vehicle imagery
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Deploy to GitHub Pages
 
-## React Compiler
+**Option A — New repo (simplest):**
+1. Create a new repo on GitHub (e.g. `monvant-live`)
+2. Upload the **contents** of this folder (not the folder itself) to the repo root
+3. Repo → Settings → Pages → Source: `main` branch, folder `/ (root)` → Save
+4. Site goes live at `https://<username>.github.io/monvant-live/` within a minute
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+**Option B — Replace your existing Vite repo:**
+1. In `techbridle/monvant-website`, create a branch called `gh-pages`
+2. Delete everything on that branch, upload this folder's contents
+3. Settings → Pages → Source: `gh-pages` branch, folder `/ (root)`
 
-## Expanding the ESLint configuration
+**Custom domain (e.g. monvant.vip):**
+- Add a file called `CNAME` at the root containing just: `monvant.vip`
+- Point your domain's DNS A records at GitHub Pages IPs, or a CNAME to `<username>.github.io`
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Notes
+- The site is built as a single-file React app per page (React + Babel via CDN). No build step required.
+- Phone: +44 7874 450 385 · WhatsApp uses the same number.
+- Email: info@monvant.vip
